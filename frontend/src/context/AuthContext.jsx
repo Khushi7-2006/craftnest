@@ -31,12 +31,24 @@ export function AuthProvider({ children }) {
     return data.user;
   };
 
-  const register = async (phone, password, confirmPassword) => {
-    const data = await api.post("/api/auth/register", { phone, password, confirmPassword });
-    setUser(data.user);
-    return data.user;
-  };
+ const register = async (
+  phone,
+  password,
+  confirmPassword,
+  name,
+  address
+) => {
+  const data = await api.post("/api/auth/register", {
+    phone,
+    password,
+    confirmPassword,
+    name,
+    address,
+  });
 
+  setUser(data.user);
+  return data.user;
+};
   const sellerLogin = async (sellerId, password) => {
     const data = await api.post("/api/auth/seller/login", { sellerId, password });
     setUser(data.user);
