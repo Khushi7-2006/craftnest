@@ -20,6 +20,7 @@ import SellerProducts from "./pages/seller/SellerProducts";
 import AddEditProduct from "./pages/seller/AddEditProduct";
 import SellerOrders from "./pages/seller/SellerOrders";
 import SellerLogin from "./pages/seller/SellerLogin";
+import Customers from "./pages/seller/Customers";
 
 function SellerLayout({ children }) {
   return (
@@ -63,13 +64,15 @@ export default function App() {
 
           <Route path="/seller/login" element={<SellerLogin />} />
           <Route
-            path="/seller"
-            element={
-              <ProtectedRoute sellerOnly>
-                <SellerLayout><Dashboard /></SellerLayout>
-              </ProtectedRoute>
-            }
-          />
+  path="/seller/customers"
+  element={
+    <ProtectedRoute sellerOnly>
+      <SellerLayout>
+        <Customers />
+      </SellerLayout>
+    </ProtectedRoute>
+  }
+/>
           <Route
             path="/seller/products"
             element={
