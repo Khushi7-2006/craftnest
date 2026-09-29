@@ -15,9 +15,11 @@ export default function Signup() {
   const navigate = useNavigate();
 
   const [countryCode, setCountryCode] = useState("+91");
-  const [phone, setPhone] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("");
+const [phone, setPhone] = useState("");
+const [address, setAddress] = useState("");
+const [password, setPassword] = useState("");
+const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -40,7 +42,13 @@ export default function Signup() {
 
     setSubmitting(true);
     try {
-      await register(`${countryCode}${phone}`, password, confirmPassword);
+     await register(
+  `${countryCode}${phone}`,
+  password,
+  confirmPassword,
+  name,
+  address
+);
       navigate("/account");
     } catch (err) {
       setError(err.message);
@@ -56,6 +64,17 @@ export default function Signup() {
         <p>Sign up with your phone number to start shopping on CraftNest.</p>
 
         <form onSubmit={handleSubmit}>
+      <div className="form-group">
+  <label htmlFor="address">Address</label>
+  <textarea
+    id="address"
+    className="form-input"
+    placeholder="Enter your address"
+    value={address}
+    onChange={(e) => setAddress(e.target.value)}
+    required
+  />
+</div>
           {error && <p className="form-error">{error}</p>}
 
           <div className="form-group">
