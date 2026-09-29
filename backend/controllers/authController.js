@@ -94,22 +94,52 @@ const login = async (req, res, next) => {
 
 // POST /api/auth/seller/login
 // The seller account is fixed (no signup, no DB record) and lives in env vars.
-const sellerLogin = (req, res) => {
-  const { sellerId, password } = req.body;
+const sellerLogin = async (req, res) => {
+  try {
+    const { sellerId, password } = req.body;
 
-  if (!sellerId || !password) {
-    return res.status(400).json({ message: "Seller ID and password are required." });
+    if (!sellerId || !password) {
+      return res.status(400).json({
+        message: "Seller ID and password are required.",
+      });
+    }
+
+    // Get current Seller ID from MongoDB.
+    // If it has never been changed, use the Render environment variable.
+    const settings = await SellerSettings.findOne();
+
+    const currentSellerId = settings?.sellerId || process.env.SELLER_ID;
+
+    if (
+      sellerId === currentSellerId &&
+      password === process.env.SELLER_PASSWORD
+    ) {
+      const token = signToken({
+        id: "seller",
+        role: "seller",
+      });
+
+      res.cookie(COOKIE_NAME, token, cookieOptions);
+
+      return res.status(200).json({
+        user: {
+          id: "seller",
+          phone: null,
+          role: "seller",
+        },
+      });
+    }
+
+    res.status(401).json({
+      message: "Invalid seller ID or password.",
+    });
+  } catch (error) {
+    console.error("Seller login error:", error);
+    res.status(500).json({
+      message: "Server error during seller login.",
+    });
   }
-
-  if (sellerId === process.env.SELLER_ID && password === process.env.SELLER_PASSWORD) {
-    const token = signToken({ id: "seller", role: "seller" });
-    res.cookie(COOKIE_NAME, token, cookieOptions);
-    return res.status(200).json({ user: { id: "seller", phone: null, role: "seller" } });
-  }
-
-  res.status(401).json({ message: "Invalid seller ID or password." });
 };
-
 // GET /api/auth/current-user (also used as /api/auth/current-seller — same token, same shape)
 const getCurrentUser = async (req, res) => {
   const token = req.cookies?.[COOKIE_NAME];
