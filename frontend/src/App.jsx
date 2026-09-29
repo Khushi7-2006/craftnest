@@ -21,6 +21,7 @@ import AddEditProduct from "./pages/seller/AddEditProduct";
 import SellerOrders from "./pages/seller/SellerOrders";
 import SellerLogin from "./pages/seller/SellerLogin";
 import Customers from "./pages/seller/Customers";
+import AccountSettings from "./pages/seller/AccountSettings";
 
 function SellerLayout({ children }) {
   return (
@@ -142,6 +143,17 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          {/* Seller Account Settings */}
+<Route
+  path="/seller/settings"
+  element={
+    <ProtectedRoute sellerOnly>
+      <SellerLayout>
+        <AccountSettings />
+      </SellerLayout>
+    </ProtectedRoute>
+  }
+/>
 
           {/* 404 */}
           <Route
