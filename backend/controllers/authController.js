@@ -20,7 +20,7 @@ const cookieOptions = {
 
 const signToken = (payload) => jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "7d" });
 
-const PHONE_REGEX = /^\+\d{7,15}$/;
+const PHONE_REGEX = /^\+\d{1,3}\d{10}$/;
 
 // POST /api/auth/register
 const register = async (req, res, next) => {
@@ -65,6 +65,11 @@ const login = async (req, res, next) => {
     if (!phone || !password) {
       return res.status(400).json({ message: "Phone number and password are required." });
     }
+    if (!PHONE_REGEX.test(phone)) {
+    return res.status(400).json({
+        message: "Enter a valid 10-digit phone number with country code."
+    });
+}
 
     const user = await User.findOne({ phone });
     if (!user) {
