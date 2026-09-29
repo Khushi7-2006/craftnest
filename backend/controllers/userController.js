@@ -1,12 +1,11 @@
+const User = require("../models/User");
+
 // GET /api/users/profile
 const getProfile = async (req, res) => {
   res.status(200).json(req.user);
 };
 
-module.exports = {
-  getProfile,
-  getAllCustomers,
-};
+// GET /api/users/customers
 const getAllCustomers = async (req, res, next) => {
   try {
     const customers = await User.find(
@@ -18,4 +17,9 @@ const getAllCustomers = async (req, res, next) => {
   } catch (error) {
     next(error);
   }
+};
+
+module.exports = {
+  getProfile,
+  getAllCustomers,
 };
