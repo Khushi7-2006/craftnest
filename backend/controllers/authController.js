@@ -155,16 +155,17 @@ const sellerLogin = async (req, res) => {
       });
     }
 
-    // Check MongoDB first.
-    // If Seller ID has never been changed, use Render environment variable.
     const settings = await SellerSettings.findOne();
 
     const currentSellerId =
       settings?.sellerId || process.env.SELLER_ID;
 
+    const currentSellerPassword =
+      settings?.sellerPassword || process.env.SELLER_PASSWORD;
+
     if (
       sellerId === currentSellerId &&
-      password === process.env.SELLER_PASSWORD
+      password === currentSellerPassword
     ) {
       const token = signToken({
         id: "seller",
@@ -272,7 +273,7 @@ const getSellerSettings = async (req, res, next) => {
 // PUT /api/auth/seller/settings
 const updateSellerSettings = async (req, res, next) => {
   try {
-    const { sellerId } = req.body;
+    const { sellerId, sellerPassword } = req.body;
 
     if (!sellerId || !sellerId.trim()) {
       return res.status(400).json({
@@ -280,21 +281,30 @@ const updateSellerSettings = async (req, res, next) => {
       });
     }
 
+    if (!sellerPassword || !sellerPassword.trim()) {
+      return res.status(400).json({
+        message: "Seller password is required.",
+      });
+    }
+
     const newSellerId = sellerId.trim();
+    const newSellerPassword = sellerPassword.trim();
 
     let settings = await SellerSettings.findOne();
 
     if (settings) {
       settings.sellerId = newSellerId;
+      settings.sellerPassword = newSellerPassword;
       await settings.save();
     } else {
       settings = await SellerSettings.create({
         sellerId: newSellerId,
+        sellerPassword: newSellerPassword,
       });
     }
 
     res.status(200).json({
-      message: "Seller ID updated successfully.",
+      message: "Seller credentials updated successfully.",
       sellerId: settings.sellerId,
     });
   } catch (error) {
