@@ -23,31 +23,32 @@ const signToken = (payload) => jwt.sign(payload, process.env.JWT_SECRET, { expir
 const PHONE_REGEX = /^\+\d{1,3}\d{10}$/;
 
 // POST /api/auth/register
-const register = async (req, res, next) => {
-  try {
-    const { phone, password, confirmPassword } = req.body;
+const {
+  phone,
+  password,
+  confirmPassword,
+  name,
+  address,
+} = req.body;
 
-    if (!phone || !password) {
-      return res.status(400).json({ message: "Phone number and password are required." });
-    }
-    if (!PHONE_REGEX.test(phone)) {
-      return res.status(400).json({ message: "Enter a valid phone number with country code." });
-    }
-    if (password.length < 6) {
-      return res.status(400).json({ message: "Password must be at least 6 characters." });
-    }
-    if (confirmPassword !== undefined && password !== confirmPassword) {
-      return res.status(400).json({ message: "Passwords do not match." });
-    }
+if (!phone || !password || !confirmPassword) {
+  return res.status(400).json({
+    message: "Phone, password and confirm password are required.",
+  });
+}
 
-    const existing = await User.findOne({ phone });
-    if (existing) {
-      return res.status(409).json({ message: "An account with this phone number already exists." });
-    }
+if (!name || !address) {
+  return res.status(400).json({
+    message: "Name and address are required.",
+  });
+}
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ phone, password: hashedPassword });
-
+const user = await User.create({
+  name,
+  phone,
+  address,
+  password: hashedPassword,
+});
     const token = signToken({ id: user._id.toString(), role: "buyer" });
     res.cookie(COOKIE_NAME, token, cookieOptions);
 
