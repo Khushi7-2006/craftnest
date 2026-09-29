@@ -15,7 +15,7 @@ export default function ProtectedRoute({ children, sellerOnly = false }) {
       <p>Please log in to view this page.</p>
       <a
         className="btn btn-primary"
-        href={sellerOnly ? "/seller/login" : "/login"}
+        href={sellerOnly ? "/seller/login" : "/account"}
       >
         Go to Login
       </a>
