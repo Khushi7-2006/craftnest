@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
+const SellerSettings = require("../models/SellerSettings");
 
 // Simple JWT-in-httpOnly-cookie auth. No sessions, no OAuth — just phone + password
 // for customers, and a single fixed Seller ID + password for the seller account.
