@@ -5,10 +5,35 @@ const mongoose = require("mongoose");
 // against SELLER_ID / SELLER_PASSWORD environment variables (see authController.js).
 const userSchema = new mongoose.Schema(
   {
-    phone: { type: String, required: true, unique: true, trim: true },
-    password: { type: String, required: true },
-    role: { type: String, enum: ["buyer", "seller"], default: "buyer" },
-  },
+name: {
+  type: String,
+  required: true,
+  trim: true,
+},
+
+phone: {
+  type: String,
+  required: true,
+  unique: true,
+  trim: true,
+},
+
+address: {
+  type: String,
+  required: true,
+  trim: true,
+},
+
+password: {
+  type: String,
+  required: true,
+},
+
+role: {
+  type: String,
+  enum: ["buyer", "seller"],
+  default: "buyer",
+},
   { timestamps: { createdAt: "createdAt", updatedAt: false } }
 );
 
