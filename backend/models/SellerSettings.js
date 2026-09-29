@@ -7,8 +7,16 @@ const sellerSettingsSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
+    sellerPassword: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
 
-module.exports = mongoose.model("SellerSettings", sellerSettingsSchema);
+module.exports = mongoose.model(
+  "SellerSettings",
+  sellerSettingsSchema
+);
