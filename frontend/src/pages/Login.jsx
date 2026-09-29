@@ -24,10 +24,10 @@ export default function Login() {
     e.preventDefault();
     setError("");
 
-    if (!/^\d{6,14}$/.test(phone)) {
-      setError("Enter a valid phone number.");
-      return;
-    }
+   if (!/^\d{10}$/.test(phone)) {
+    setError("Enter a valid 10-digit phone number.");
+    return;
+}
 
     setSubmitting(true);
     try {
@@ -66,7 +66,7 @@ export default function Login() {
                 id="phone"
                 type="tel"
                 className="form-input"
-                placeholder="9876543210"
+               maxLength={10}
                 value={phone}
                 onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
               />
