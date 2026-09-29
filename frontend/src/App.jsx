@@ -97,15 +97,16 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/seller/orders"
-            element={
-              <ProtectedRoute sellerOnly>
-                <SellerLayout><SellerOrders /></SellerLayout>
-              </ProtectedRoute>
-            }
-          />
-
+         <Route
+  path="/seller/customers"
+  element={
+    <ProtectedRoute sellerOnly>
+      <SellerLayout>
+        <Customers />
+      </SellerLayout>
+    </ProtectedRoute>
+  }
+/>
           <Route path="*" element={<div className="container section empty-state"><p>Page not found.</p></div>} />
         </Routes>
       </main>
