@@ -6,6 +6,7 @@ export default function SellerSidebar() {
   { to: "/seller/products", label: "Products" },
   { to: "/seller/products/new", label: "Add Product" },
   { to: "/seller/orders", label: "Orders" },
+{ to: "/seller/customers", label: "Customers" },
   { to: "/seller/settings", label: "Account Settings" },
 ];
   return (
