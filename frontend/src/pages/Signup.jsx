@@ -25,10 +25,10 @@ export default function Signup() {
     e.preventDefault();
     setError("");
 
-    if (!/^\d{6,14}$/.test(phone)) {
-      setError("Enter a valid phone number.");
-      return;
-    }
+   if (!/^\d{10}$/.test(phone)) {
+    setError("Enter a valid 10-digit phone number.");
+    return;
+}
     if (password.length < 6) {
       setError("Password must be at least 6 characters.");
       return;
@@ -71,14 +71,15 @@ export default function Signup() {
                   <option key={c.code} value={c.code}>{c.label}</option>
                 ))}
               </select>
-              <input
-                id="phone"
-                type="tel"
-                className="form-input"
-                placeholder="9876543210"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-              />
+            <input
+  id="phone"
+  type="tel"
+  className="form-input"
+  placeholder="9876543210"
+  maxLength={10}
+  value={phone}
+  onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
+/>
             </div>
           </div>
 
