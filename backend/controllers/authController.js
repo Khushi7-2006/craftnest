@@ -269,28 +269,37 @@ const getSellerSettings = async (req, res, next) => {
     next(error);
   }
 };
-
 // PUT /api/auth/seller/settings
 const updateSellerSettings = async (req, res, next) => {
   try {
     const { sellerId, sellerPassword } = req.body;
 
-    if (!sellerId || !sellerId.trim()) {
+    let settings = await SellerSettings.findOne();
+
+    const currentPassword =
+      settings?.sellerPassword || process.env.SELLER_PASSWORD;
+
+    const newSellerId =
+      sellerId?.trim() ||
+      settings?.sellerId ||
+      process.env.SELLER_ID;
+
+    const newSellerPassword =
+      sellerPassword?.trim() === "KEEP_CURRENT"
+        ? currentPassword
+        : sellerPassword?.trim() || currentPassword;
+
+    if (!newSellerId) {
       return res.status(400).json({
         message: "Seller ID is required.",
       });
     }
 
-    if (!sellerPassword || !sellerPassword.trim()) {
+    if (!newSellerPassword) {
       return res.status(400).json({
         message: "Seller password is required.",
       });
     }
-
-    const newSellerId = sellerId.trim();
-    const newSellerPassword = sellerPassword.trim();
-
-    let settings = await SellerSettings.findOne();
 
     if (settings) {
       settings.sellerId = newSellerId;
@@ -311,7 +320,6 @@ const updateSellerSettings = async (req, res, next) => {
     next(error);
   }
 };
-
 // Export all functions
 module.exports = {
   register,
