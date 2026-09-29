@@ -35,12 +35,15 @@ export default function App() {
   return (
     <div className="app-shell">
       <Navbar />
+
       <main className="app-main">
         <Routes>
+          {/* Normal User Routes */}
           <Route path="/" element={<Home />} />
           <Route path="/shop" element={<Shop />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
+
           <Route
             path="/checkout"
             element={
@@ -49,9 +52,11 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
           <Route path="/order-confirmation" element={<OrderConfirmation />} />
           <Route path="/account" element={<Account />} />
           <Route path="/signup" element={<Signup />} />
+
           <Route
             path="/orders"
             element={
@@ -60,56 +65,96 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+
           <Route path="/track-order" element={<TrackOrder />} />
 
+          {/* Seller Login */}
           <Route path="/seller/login" element={<SellerLogin />} />
+
+          {/* Seller Dashboard */}
           <Route
-  path="/seller/customers"
-  element={
-    <ProtectedRoute sellerOnly>
-      <SellerLayout>
-        <Customers />
-      </SellerLayout>
-    </ProtectedRoute>
-  }
-/>
+            path="/seller"
+            element={
+              <ProtectedRoute sellerOnly>
+                <SellerLayout>
+                  <Dashboard />
+                </SellerLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Seller Products */}
           <Route
             path="/seller/products"
             element={
               <ProtectedRoute sellerOnly>
-                <SellerLayout><SellerProducts /></SellerLayout>
+                <SellerLayout>
+                  <SellerProducts />
+                </SellerLayout>
               </ProtectedRoute>
             }
           />
+
+          {/* Add Product */}
           <Route
             path="/seller/products/new"
             element={
               <ProtectedRoute sellerOnly>
-                <SellerLayout><AddEditProduct /></SellerLayout>
+                <SellerLayout>
+                  <AddEditProduct />
+                </SellerLayout>
               </ProtectedRoute>
             }
           />
+
+          {/* Edit Product */}
           <Route
             path="/seller/products/edit/:id"
             element={
               <ProtectedRoute sellerOnly>
-                <SellerLayout><AddEditProduct /></SellerLayout>
+                <SellerLayout>
+                  <AddEditProduct />
+                </SellerLayout>
               </ProtectedRoute>
             }
           />
-         <Route
-  path="/seller/customers"
-  element={
-    <ProtectedRoute sellerOnly>
-      <SellerLayout>
-        <Customers />
-      </SellerLayout>
-    </ProtectedRoute>
-  }
-/>
-          <Route path="*" element={<div className="container section empty-state"><p>Page not found.</p></div>} />
+
+          {/* Seller Orders */}
+          <Route
+            path="/seller/orders"
+            element={
+              <ProtectedRoute sellerOnly>
+                <SellerLayout>
+                  <SellerOrders />
+                </SellerLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Seller Customers */}
+          <Route
+            path="/seller/customers"
+            element={
+              <ProtectedRoute sellerOnly>
+                <SellerLayout>
+                  <Customers />
+                </SellerLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          {/* 404 */}
+          <Route
+            path="*"
+            element={
+              <div className="container section empty-state">
+                <p>Page not found.</p>
+              </div>
+            }
+          />
         </Routes>
       </main>
+
       <Footer />
     </div>
   );
