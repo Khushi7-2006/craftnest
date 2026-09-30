@@ -11,7 +11,7 @@ const generateOrderId = () => {
 // Creates an order from the cart, checks stock, and reduces stock for each product.
 const createOrder = async (req, res, next) => {
   try {
-    const { products, shippingAddress } = req.body;
+    const { products, shippingAddress, paymentMethod } = req.body;
 
     if (!products || products.length === 0) {
       return res.status(400).json({ message: "Your cart is empty." });
@@ -19,6 +19,9 @@ const createOrder = async (req, res, next) => {
     if (!shippingAddress) {
       return res.status(400).json({ message: "Shipping address is required." });
     }
+    if (!["COD", "UPI", "CARD"].includes(paymentMethod)) {
+  return res.status(400).json({ message: "Invalid payment method." });
+}
 
     // Verify stock and build order items from real DB data (never trust client-sent prices)
     const orderItems = [];
@@ -51,15 +54,16 @@ const createOrder = async (req, res, next) => {
 
     const expectedDelivery = new Date();
     expectedDelivery.setDate(expectedDelivery.getDate() + 5);
-
-    const order = await Order.create({
-      orderId: generateOrderId(),
-      user: req.user._id,
-      products: orderItems,
-      totalAmount,
-      shippingAddress,
-      expectedDelivery,
-    });
+const order = await Order.create({
+  orderId: generateOrderId(),
+  user: req.user._id,
+  products: orderItems,
+  totalAmount,
+  shippingAddress,
+  paymentMethod,
+  paymentStatus: paymentMethod === "COD" ? "Pending" : "Paid",
+  expectedDelivery,
+});
 
     res.status(201).json(order);
   } catch (error) {
