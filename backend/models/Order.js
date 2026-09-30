@@ -35,6 +35,11 @@ const orderSchema = new mongoose.Schema({
     pinCode: { type: String, required: true },
   },
   paymentStatus: { type: String, enum: ["Paid", "Pending"], default: "Paid" },
+  paymentMethod: {
+  type: String,
+  enum: ["COD", "UPI", "CARD"],
+  default: "COD",
+},
   status: { type: String, enum: ORDER_STATUSES, default: "Order Placed" },
   orderDate: { type: Date, default: Date.now },
   expectedDelivery: { type: Date, required: true },
