@@ -16,10 +16,10 @@ export default function Signup() {
 
   const [countryCode, setCountryCode] = useState("+91");
   const [name, setName] = useState("");
-const [phone, setPhone] = useState("");
-const [address, setAddress] = useState("");
-const [password, setPassword] = useState("");
-const [confirmPassword, setConfirmPassword] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
@@ -27,28 +27,42 @@ const [confirmPassword, setConfirmPassword] = useState("");
     e.preventDefault();
     setError("");
 
-   if (!/^\d{10}$/.test(phone)) {
-    setError("Enter a valid 10-digit phone number.");
-    return;
-}
+    if (!name.trim()) {
+      setError("Name is required.");
+      return;
+    }
+
+    if (!address.trim()) {
+      setError("Address is required.");
+      return;
+    }
+
+    if (!/^\d{10}$/.test(phone)) {
+      setError("Enter a valid 10-digit phone number.");
+      return;
+    }
+
     if (password.length < 6) {
       setError("Password must be at least 6 characters.");
       return;
     }
+
     if (password !== confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
 
     setSubmitting(true);
+
     try {
-     await register(
-  `${countryCode}${phone}`,
-  password,
-  confirmPassword,
-  name,
-  address
-);
+      await register(
+        `${countryCode}${phone}`,
+        password,
+        confirmPassword,
+        name,
+        address
+      );
+
       navigate("/account");
     } catch (err) {
       setError(err.message);
@@ -61,24 +75,46 @@ const [confirmPassword, setConfirmPassword] = useState("");
     <div className="container section login-page">
       <div className="card login-card">
         <h1>Create Your Account</h1>
-        <p>Sign up with your phone number to start shopping on CraftNest.</p>
+
+        <p>
+          Sign up with your phone number to start shopping on CraftNest.
+        </p>
 
         <form onSubmit={handleSubmit}>
-      <div className="form-group">
-  <label htmlFor="address">Address</label>
-  <textarea
-    id="address"
-    className="form-input"
-    placeholder="Enter your address"
-    value={address}
-    onChange={(e) => setAddress(e.target.value)}
-    required
-  />
-</div>
+
+          {/* NAME */}
+          <div className="form-group">
+            <label htmlFor="name">Name</label>
+            <input
+              id="name"
+              type="text"
+              className="form-input"
+              placeholder="Enter your name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* ADDRESS */}
+          <div className="form-group">
+            <label htmlFor="address">Address</label>
+            <textarea
+              id="address"
+              className="form-input"
+              placeholder="Enter your address"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              required
+            />
+          </div>
+
           {error && <p className="form-error">{error}</p>}
 
+          {/* PHONE */}
           <div className="form-group">
             <label htmlFor="phone">Phone Number</label>
+
             <div className="form-row">
               <select
                 className="form-select"
@@ -87,49 +123,70 @@ const [confirmPassword, setConfirmPassword] = useState("");
                 aria-label="Country code"
               >
                 {COUNTRY_CODES.map((c) => (
-                  <option key={c.code} value={c.code}>{c.label}</option>
+                  <option key={c.code} value={c.code}>
+                    {c.label}
+                  </option>
                 ))}
               </select>
-            <input
-  id="phone"
-  type="tel"
-  className="form-input"
-  placeholder="9876543210"
-  maxLength={10}
-  value={phone}
-  onChange={(e) => setPhone(e.target.value.replace(/\D/g, ""))}
-/>
+
+              <input
+                id="phone"
+                type="tel"
+                className="form-input"
+                placeholder="9876543210"
+                maxLength={10}
+                value={phone}
+                onChange={(e) =>
+                  setPhone(e.target.value.replace(/\D/g, ""))
+                }
+                required
+              />
             </div>
           </div>
 
+          {/* PASSWORD */}
           <div className="form-group">
             <label htmlFor="password">Password</label>
+
             <input
               id="password"
               type="password"
               className="form-input"
+              placeholder="Enter password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
 
+          {/* CONFIRM PASSWORD */}
           <div className="form-group">
             <label htmlFor="confirmPassword">Confirm Password</label>
+
             <input
               id="confirmPassword"
               type="password"
               className="form-input"
+              placeholder="Confirm password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
+              required
             />
           </div>
 
-          <button className="btn btn-primary btn-block" type="submit" disabled={submitting}>
+          <button
+            className="btn btn-primary btn-block"
+            type="submit"
+            disabled={submitting}
+          >
             {submitting ? "Creating account..." : "Sign Up"}
           </button>
+
         </form>
 
-        <p>Already have an account? <Link to="/account">Login</Link></p>
+        <p>
+          Already have an account? <Link to="/account">Login</Link>
+        </p>
       </div>
     </div>
   );
