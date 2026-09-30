@@ -3,7 +3,6 @@ import { useNavigate, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 import { useAuth } from "../context/AuthContext";
 import { api } from "../services/api";
-
 const EMPTY_FORM = {
   fullName: "",
   email: "",
@@ -12,6 +11,7 @@ const EMPTY_FORM = {
   city: "",
   state: "",
   pinCode: "",
+  paymentMethod: "COD",
 };
 
 export default function Checkout() {
@@ -55,10 +55,11 @@ export default function Checkout() {
     setPlacing(true);
     setApiError("");
     try {
-      const order = await api.post("/api/orders", {
-        products: items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
-        shippingAddress: form,
-      });
+    const order = await api.post("/api/orders", {
+  products: items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
+  shippingAddress: form,
+  paymentMethod: form.paymentMethod,
+});
       clearCart();
       navigate(`/order-confirmation?id=${order.orderId}`);
     } catch (err) {
@@ -109,6 +110,48 @@ export default function Checkout() {
               {errors[name] && <p className="form-error">{errors[name]}</p>}
             </div>
           ))}
+                    <div className="form-group">
+            <label>Payment Method</label>
+
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="COD"
+                  checked={form.paymentMethod === "COD"}
+                  onChange={handleChange}
+                />
+                Cash on Delivery
+              </label>
+            </div>
+
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="UPI"
+                  checked={form.paymentMethod === "UPI"}
+                  onChange={handleChange}
+                />
+                UPI
+              </label>
+            </div>
+
+            <div>
+              <label>
+                <input
+                  type="radio"
+                  name="paymentMethod"
+                  value="CARD"
+                  checked={form.paymentMethod === "CARD"}
+                  onChange={handleChange}
+                />
+                Card / Net Banking
+              </label>
+            </div>
+          </div>
 
           <button className="btn btn-primary btn-block" type="submit" disabled={placing}>
             {placing ? "Placing Order..." : `Place Order — ₹${total}`}
