@@ -24,11 +24,7 @@ export default function Account() {
           <span className="badge badge-success">{user.role === "seller" ? "Seller" : "Buyer"}</span>
         </div>
         <div className="account-actions">
-          <a href="/orders" className="btn btn-outline">Order History</a>
-          {user.role === "seller" && (
-            <a href="/seller" className="btn btn-outline">Seller Dashboard</a>
-          )}
-          <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
+                <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
         </div>
       </div>
     </div>
